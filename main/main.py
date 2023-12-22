@@ -14,6 +14,12 @@ data_files ={
     'titletext': 'meta_song_titletext.parquet',
     'song_id': 'meta_song.parquet'
 }
-pd.read_parquet("datagame-2023/label_test_source.parquet", engine='pyarrow')
+for key, file_name in data_files.items():
+    file_path = f"{data_fold}{file_name}"
+    df = pd.read_parquet(file_path, engine='pyarrow')
+    
+    print(f"Dataframe for '{key}':")
+    print(df)
+    print("\n")
 
 print("h")
