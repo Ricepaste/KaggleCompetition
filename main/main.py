@@ -14,6 +14,7 @@ data_files ={
     'titletext': 'meta_song_titletext.parquet',
     'song_id': 'meta_song.parquet'
 }
-pd.read_parquet("datagame-2023/label_test_source.parquet", engine='pyarrow')
+data = pd.read_parquet("datagame-2023/label_test_source.parquet", engine='pyarrow')
+# pd.read_csv("./main/datagame-2023/sample.csv")
 
-print("h")
+print(data)
