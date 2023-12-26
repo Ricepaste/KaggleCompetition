@@ -9,7 +9,7 @@ import pandas as pd
 import numpy as np
 
 
-def genre():
+def genre(coding_table):
     data_fold = 'datagame-2023/'
 
     # data_files = {
@@ -48,7 +48,7 @@ def genre():
                 temp = [session_id[i]]
                 find_index = song_id_genre.index(song_id[i])
 
-                temp.append(genre_id[find_index])
+                temp.append(coding_table[genre_id[find_index]])
                 if (listening_order[i] == 1):
                     temp.append(2000)
                 else:
@@ -64,11 +64,11 @@ def genre():
     for i in genre:
         print(i)
 
-    for i in range(1, len(genre)):
-        temp = list(np.frombuffer(
-            genre[i][1].encode('utf-8'), dtype=np.uint8))
-        temp = list(map(str, temp))
-        genre[i][1] = int("".join(temp))
+    # for i in range(1, len(genre)):
+    #     temp = list(np.frombuffer(
+    #         genre[i][1].encode('utf-8'), dtype=np.uint8))
+    #     temp = list(map(str, temp))
+    #     genre[i][1] = int("".join(temp))
     save_to_csv("genre", np.array(genre))
     data_name()
 
@@ -113,11 +113,17 @@ def data_name():
                   "5455e1699025b025a3523aba4719e818": "有聲書/兒童青少Audiobook-Children's&Teenage",
                   "f6f02545c1905a8c72c5bf006579996e": "有聲書/教育Audiobook-Education"}
     ge = [["id", "name"]]
+    coding_table = {}
+    cur = 0
     for key, value in genre_dict.items():
-        temp = np.frombuffer(key.encode("utf-8"), dtype=np.uint8)
-        temp = list(map(str, temp))
-        key = int("".join(temp))
-        ge.append([key, value])
+        # temp = np.frombuffer(key.encode("utf-8"), dtype=np.uint8)
+        # temp = list(map(str, temp))
+        # key = int("".join(temp))
+        # ge.append([cur, value])
+        ge.append([cur, value])
+        coding_table[key] = cur
+
+        cur += 1
 
     # for i in range(1, len(genre)):
     #     temp = list(np.frombuffer(
@@ -125,6 +131,7 @@ def data_name():
     #     temp = list(map(str, temp))
     #     genre[i][1] = "".join(temp)
     save_to_csv("genre_name", np.array(ge))
+    return coding_table
 
 
 def save_to_csv(name, data_output):
@@ -138,7 +145,8 @@ def load_user_artists(user_artists_file: Path) -> scipy.sparse.csr_matrix:
     """Load the user artists file and return a user-artists matrix in csr
     fromat.
     """
-    user_artists = pd.read_csv(user_artists_file, sep="\t", dtype='double')
+    user_artists = pd.read_csv(user_artists_file, sep="\t", dtype='int64')
+    # print(user_artists.artistID.astype('int64'))
     # user_artists = user_artists.values.tolist()
     # print(user_artists)
     # for i in range(2):
@@ -190,8 +198,8 @@ def main():
 
 
 def debug():
-    data_name()
-    genre()
+    coding_table = data_name()
+    genre(coding_table)
 
 
 if __name__ == "__main__":
